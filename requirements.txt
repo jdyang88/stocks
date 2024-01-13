@@ -3,3 +3,4 @@ beautifulsoup4
 plotly
 matplotlib
 tensorflow
+scikit-learn
