@@ -14,6 +14,7 @@ st.title('Stock Price Prediction Dashboard')
 
 # Company and their stock codes
 companies = {
+    'Samsung Electronics (005930)': '005930',
     'SK Telecom (017670)': '017670',
     'LG Chemicals (051910)': '051910',
     'SK Innovation (096770)': '096770',
@@ -21,7 +22,7 @@ companies = {
     'Samsung Biologics (207940)': '207940',
     'SK Hynix (000660)': '000660',
     'Korean Air (003490)': '003490',
-    'Samsung Electronics (005930)': '005930',
+    'Hyundae Motor (005380)': '005380',
     # Add more companies and their codes as needed
 }
 
@@ -30,8 +31,11 @@ selected_company = st.selectbox('Select a company:', list(companies.keys()))
 stock_code = companies[selected_company]
 
 # Displaying the selected company and stock code
-st.write(f"Selected Company: {selected_company.split(' (')[0]}")
-st.write(f"Ticker Number: {stock_code}")
+col1, col2 = st.columns(2)
+with col1:
+    st.write(f"Selected Company: {selected_company.split(' (')[0]}")
+with col2:    
+    st.write(f"Ticker Number: {stock_code}")
 
 # Layout for start and end date inputs
 col1, col2 = st.columns(2)
@@ -73,6 +77,7 @@ future_days = [10, 20, 30, 60]
 
 # LSTM Model Execution Button
 if st.button('Run LSTM Model to predict future price'):
+    st.write("Modeling in progress. Please wait...")
     # Initialize a progress bar
     progress_bar = st.progress(0)
 
@@ -128,6 +133,8 @@ if st.button('Run LSTM Model to predict future price'):
     # Calculate root mean squared error
     trainScore = np.sqrt(mean_squared_error(trainY[0], trainPredict[:, 0]))
     testScore = np.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
+
+    st.write("*The prediction is as below:*")
 
     # Display Model Outputs inside the if statement
     if trainScore is not None:
