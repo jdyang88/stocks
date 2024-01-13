@@ -77,7 +77,7 @@ future_days = [10, 20, 30, 60]
 
 # LSTM Model Execution Button
 if st.button('Run LSTM Model to predict future price'):
-    st.write("Modeling in progress. Please wait...")
+    st.write("*Modeling in progress. Please wait...*")
     # Initialize a progress bar
     progress_bar = st.progress(0)
 
@@ -134,7 +134,7 @@ if st.button('Run LSTM Model to predict future price'):
     trainScore = np.sqrt(mean_squared_error(trainY[0], trainPredict[:, 0]))
     testScore = np.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
 
-    st.write("*The prediction is as below:*")
+    st.write("*Modeling is done! The predicted price is as below:*")
 
     # Display Model Outputs inside the if statement
     if trainScore is not None:
