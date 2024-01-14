@@ -14,10 +14,11 @@ st.title('Stock Price Prediction Dashboard')
 
 # Company and their stock codes
 companies = {
+    'SK Innovation (096770)': '096770',
     'Samsung Electronics (005930)': '005930',
     'SK Telecom (017670)': '017670',
     'LG Chemicals (051910)': '051910',
-    'SK Innovation (096770)': '096770',
+    'SK (034730)': '034730',
     'Celtrion (068270)': '068270',
     'Samsung Biologics (207940)': '207940',
     'SK Hynix (000660)': '000660',
