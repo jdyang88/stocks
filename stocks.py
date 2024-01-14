@@ -37,19 +37,35 @@ with col1:
 with col2:    
     st.write(f"Ticker Number: {stock_code}")
 
-# Layout for start and end date inputs
+# Initialize session state for start and end dates if not already set
+if 'start_date' not in st.session_state:
+    st.session_state['start_date'] = datetime.date(2000, 1, 1)
+if 'end_date' not in st.session_state:
+    st.session_state['end_date'] = datetime.datetime.today().date()
+
+# Function to update date range slider based on start/end date inputs
+def update_date_range():
+    st.session_state['date_range'] = (st.session_state['start_date'], st.session_state['end_date'])
+
+# Function to update start/end date inputs based on date range slider
+def update_start_end_dates():
+    st.session_state['start_date'], st.session_state['end_date'] = st.session_state['date_range']
+
+# Layout for start and end date inputs with callbacks
 col1, col2 = st.columns(2)
 with col1:
-    start_date = st.date_input('Start Date', datetime.date(2000, 1, 1))
+    start_date = st.date_input('Start Date', st.session_state['start_date'], on_change=update_date_range, key='start_date')
 with col2:
-    end_date = st.date_input('End Date', datetime.datetime.today())
+    end_date = st.date_input('End Date', st.session_state['end_date'], on_change=update_date_range, key='end_date')
 
 # Range slider for date selection
 date_range = st.slider(
     "Select Date Range",
     min_value=datetime.date(2000, 1, 1),
     max_value=datetime.datetime.today().date(),
-    value=(start_date, end_date)
+    value=(st.session_state['start_date'], st.session_state['end_date']),
+    on_change=update_start_end_dates,
+    key='date_range'
 )
 
 # Updating the start and end dates based on the range slider
@@ -195,5 +211,4 @@ if st.button('Run LSTM Model to predict future price'):
     plt.legend()
     plt.grid()
     st.pyplot(plt)
-  
 
