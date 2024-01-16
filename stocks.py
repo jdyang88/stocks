@@ -137,27 +137,42 @@ if st.button('Run LSTM Model to predict future price'):
     model.compile(loss='mean_squared_error', optimizer='adam')
     model.fit(trainX, trainY, epochs=5, batch_size=1, verbose=2)
 
+
     # Make predictions
     trainPredict = model.predict(trainX)
     testPredict = model.predict(testX)
 
+    # Expand the dimensions of trainY and testY for inverse transformation
+    trainY_expanded = np.expand_dims(trainY, axis=1)
+    testY_expanded = np.expand_dims(testY, axis=1)
+
     # Invert predictions
     trainPredict = scaler.inverse_transform(trainPredict)
-    trainY = scaler.inverse_transform([trainY])
+    trainY = scaler.inverse_transform(trainY_expanded)
     testPredict = scaler.inverse_transform(testPredict)
-    testY = scaler.inverse_transform([testY])
+    testY = scaler.inverse_transform(testY_expanded)
 
     # Calculate root mean squared error
-    trainScore = np.sqrt(mean_squared_error(trainY[0], trainPredict[:, 0]))
-    testScore = np.sqrt(mean_squared_error(testY[0], testPredict[:, 0]))
+    trainScore = np.sqrt(mean_squared_error(trainY, trainPredict))
+    testScore = np.sqrt(mean_squared_error(testY, testPredict))
 
-    st.write("*Modeling is done! The predicted price is as below:*")
+    # Calculate average values of the training and test datasets
+    train_avg = np.average(trainY)
+    test_avg = np.average(testY)
 
-    # Display Model Outputs inside the if statement
-    if trainScore is not None:
+    # Calculate accuracy percentage
+    train_accuracy = (1 - trainScore / train_avg) * 100
+    test_accuracy = (1 - testScore / test_avg) * 100
+
+    # Display Model Outputs and Accuracy
+    if trainScore is not None and train_accuracy is not None:
         st.write(f"Train RMSE: {trainScore:.2f}")
-    if testScore is not None:
+        st.write(f"Train Predicted Accuracy: {train_accuracy:.2f}%")
+
+    if testScore is not None and test_accuracy is not None:
         st.write(f"Test RMSE: {testScore:.2f}")
+        st.write(f"Test Predicted Accuracy: {test_accuracy:.2f}%")
+
 
     last_price = dataset[-1]
     last_price = np.reshape(last_price, (1, 1, 1))
@@ -212,4 +227,5 @@ if st.button('Run LSTM Model to predict future price'):
     plt.legend()
     plt.grid()
     st.pyplot(plt)
+
 
