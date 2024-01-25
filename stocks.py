@@ -8,6 +8,7 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import pandas as pd
+from prophet import Prophet
 
 # Streamlit app title
 st.title('Stock Price Prediction Dashboard')
