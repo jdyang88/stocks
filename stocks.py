@@ -229,3 +229,45 @@ if st.button('Run LSTM Model to predict future price'):
     st.pyplot(plt)
 
 
+# Prophet Model Execution Button
+if st.button('Run Prophet Model to predict future price'):
+    st.write("*Prophet Modeling in progress. Please wait...*")
+    
+    # Initialize a progress bar for Prophet
+    prophet_progress_bar = st.progress(0)
+
+    # FinanceDataReader to fetch stock data
+    df = fdr.DataReader(stock_code, start_date, end_date)
+    df = df.reset_index()
+    df.rename(columns={'Date':'ds', 'Close':'y'}, inplace=True)
+
+    # Update progress after data preparation
+    prophet_progress_bar.progress(10)
+
+    # Create and fit the Prophet model
+    prophet_model = Prophet(daily_seasonality=True)
+    prophet_model.fit(df)
+
+    # Create future dataframe for predictions
+    future = prophet_model.make_future_dataframe(periods=max(future_days))
+    forecast = prophet_model.predict(future)
+
+    # Update progress
+    prophet_progress_bar.progress(50)
+
+    # Displaying the forecast
+    fig1 = prophet_model.plot(forecast)
+    st.pyplot(fig1)
+
+    # Displaying the forecast components
+    fig2 = prophet_model.plot_components(forecast)
+    st.pyplot(fig2)
+
+    # Update the progress bar to complete
+    prophet_progress_bar.progress(100)
+
+    # Display future price predictions
+    for days in future_days:
+        predicted_price = forecast.iloc[-days]['yhat']
+        st.write(f"{days} days later {selected_company.split(' (')[0]} Stock Price Prediction: {predicted_price:.2f}")
+
