@@ -4,3 +4,4 @@ plotly
 matplotlib
 tensorflow
 scikit-learn
+prophet
