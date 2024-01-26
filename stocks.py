@@ -9,6 +9,7 @@ from sklearn.metrics import mean_squared_error
 import numpy as np
 import pandas as pd
 from prophet import Prophet
+from prophet.plot import add_changepoints_to_plot
 
 # Streamlit app title
 st.title('Stock Price Prediction Dashboard')
@@ -256,8 +257,13 @@ if st.button('Run Prophet Model to predict future price'):
     # Update progress
     prophet_progress_bar.progress(50)
 
-    # Displaying the forecast
-    fig1 = prophet_model.plot(forecast)
+    # Customizing the forecast plot using Matplotlib
+    fig1, ax1 = plt.subplots(figsize=(10, 6))
+    prophet_model.plot(forecast, ax=ax1)
+    ax1.set_ylabel('Stock Price')  # Set Y-axis label
+    ax1.set_title(f'Forecast for {selected_company.split(" (")[0]}')  # Set Title
+    add_changepoints_to_plot(ax1, prophet_model, forecast)  # Optional: to add changepoints
+
     st.pyplot(fig1)
 
     # Displaying the forecast components
@@ -271,4 +277,3 @@ if st.button('Run Prophet Model to predict future price'):
     for days in future_days:
         predicted_price = forecast.iloc[-days]['yhat']
         st.write(f"{days} days later {selected_company.split(' (')[0]} Stock Price Prediction: {predicted_price:.2f}")
-
