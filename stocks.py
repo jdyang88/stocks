@@ -26,6 +26,7 @@ companies = {
     'SK Hynix (000660)': '000660',
     'Korean Air (003490)': '003490',
     'Hyundae Motor (005380)': '005380',
+    'Posco Holdings (005490)': '005490',
     # Add more companies and their codes as needed
 }
 
@@ -169,11 +170,11 @@ if st.button('Run LSTM Model to predict future price'):
     # Display Model Outputs and Accuracy
     if trainScore is not None and train_accuracy is not None:
         st.write(f"Train RMSE: {trainScore:.2f}")
-        st.write(f"Train Predicted Accuracy: {train_accuracy:.2f}%")
+        # st.write(f"Train Predicted Accuracy: {train_accuracy:.2f}%")
 
     if testScore is not None and test_accuracy is not None:
         st.write(f"Test RMSE: {testScore:.2f}")
-        st.write(f"Test Predicted Accuracy: {test_accuracy:.2f}%")
+        # st.write(f"Test Predicted Accuracy: {test_accuracy:.2f}%")
 
 
     last_price = dataset[-1]
