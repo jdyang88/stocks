@@ -365,6 +365,9 @@ df = fdr.DataReader(stock_code, start_date, end_date)
 # Display stock price graph
 st.line_chart(df['Close'])
 
+# Display the source of stock data
+st.write("Data Source: [FinanceDataReader](https://financedata.github.io/finance_data_reader/)")
+
 # Checkbox to toggle the display of recent 10 days of closing prices
 if st.checkbox('Show Recent 10 Days of Closing Prices'):
     # Filter the DataFrame to get the last 10 days of data
@@ -373,10 +376,6 @@ if st.checkbox('Show Recent 10 Days of Closing Prices'):
     # Display the last 10 days of data
     st.write("Recent 10 days of Closing Prices:")
     st.dataframe(last_10_days_df)
-
-# Display the source of stock data
-st.write("Data Source: [FinanceDataReader](https://financedata.github.io/finance_data_reader/)")
-
 
 # Initialize variables with default values
 trainScore = testScore = next_day_prediction = None
