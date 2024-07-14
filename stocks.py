@@ -81,6 +81,9 @@ df = fdr.DataReader(stock_code, start_date, end_date)
 # Display stock price graph
 st.line_chart(df['Close'])
 
+# Display the source of stock data
+st.write("Data Source: [FinanceDataReader](https://financedata.github.io/finance_data_reader/)")
+
 # Checkbox to toggle the display of recent 10 days of closing prices
 if st.toggle('Show Recent 10 Days of Closing Prices'):
     # Filter the DataFrame to get the last 10 days of data
@@ -176,7 +179,6 @@ if st.button('Run LSTM Model to predict future price'):
         st.write(f"Test RMSE: {testScore:.2f}")
         # st.write(f"Test Predicted Accuracy: {test_accuracy:.2f}%")
 
-
     last_price = dataset[-1]
     last_price = np.reshape(last_price, (1, 1, 1))
     next_day_prediction = model.predict(last_price)
@@ -231,6 +233,15 @@ if st.button('Run LSTM Model to predict future price'):
     plt.grid()
     st.pyplot(plt)
 
+    # LSTM Model Explanation
+    st.write("""
+    **LSTM (Long Short-Term Memory) Model:**
+    LSTM is a type of recurrent neural network (RNN) that is well-suited to predict time series data. 
+    It uses memory cells to store information over long periods of time, making it effective for capturing patterns in sequential data.
+    In this application, the LSTM model is used to predict future stock prices based on historical closing prices.
+    """)
+
+
 
 # Prophet Model Execution Button
 if st.button('Run Prophet Model to predict future price'):
@@ -278,6 +289,15 @@ if st.button('Run Prophet Model to predict future price'):
     for days in future_days:
         predicted_price = forecast.iloc[-days]['yhat']
         st.write(f"{days} days later {selected_company.split(' (')[0]} Stock Price Prediction: {predicted_price:.2f}")
+
+    # Prophet Model Explanation
+    st.write("""
+    **Prophet Model:**
+    Prophet is a forecasting tool developed by Facebook, designed for time series data. 
+    It is particularly effective for time series with strong seasonal effects and missing data. 
+    The model decomposes the time series into trend, seasonality, and holiday effects, making it robust for various business time series predictions.
+    In this application, the Prophet model is used to predict future stock prices based on historical closing prices.
+    """)
 
 
 
