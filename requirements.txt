@@ -1,7 +1,11 @@
-finance-datareader
-beautifulsoup4
-plotly
-matplotlib
-tensorflow
+streamlit
+FinanceDataReader
+keras
 scikit-learn
+numpy
+pandas
 prophet
+matplotlib
+newsapi-python
+textblob
+nltk
