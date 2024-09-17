@@ -423,7 +423,7 @@ if st.button('Run Enhanced LSTM Model to Predict Future Price'):
     # Fetch recent news articles
     st.write("Fetching recent news articles for sentiment analysis...")
     # Get the API key from environment variable
-    news_api_key = os.environ.get('c4b101fd9551431cadbae50314fba17c')
+    news_api_key = os.environ.get(c4b101fd9551431cadbae50314fba17c)
     if not news_api_key:
         st.error("News API Key is not set. Please set the NEWS_API_KEY environment variable.")
         st.stop()
