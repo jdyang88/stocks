@@ -301,6 +301,8 @@
 
 
 
+# stocks.py
+
 import streamlit as st
 import FinanceDataReader as fdr
 import datetime
@@ -311,10 +313,11 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 import numpy as np
 import pandas as pd
-from prophet import Prophet
-from prophet.plot import add_changepoints_to_plot
+import os
 from newsapi import NewsApiClient
 from textblob import TextBlob
+import nltk
+nltk.download('punkt')
 
 # Streamlit app title
 st.title('Enhanced Stock Price Prediction Dashboard with Sentiment Analysis')
@@ -344,7 +347,7 @@ company_name = selected_company.split(' (')[0]
 col1, col2 = st.columns(2)
 with col1:
     st.write(f"Selected Company: {company_name}")
-with col2:    
+with col2:
     st.write(f"Ticker Number: {stock_code}")
 
 # Initialize session state for start and end dates if not already set
@@ -419,15 +422,31 @@ if st.button('Run Enhanced LSTM Model to Predict Future Price'):
     # **Sentiment Analysis Integration**
     # Fetch recent news articles
     st.write("Fetching recent news articles for sentiment analysis...")
-    news_api_key = 'c4b101fd9551431cadbae50314fba17c'  # Replace with your NewsAPI key
+    # Get the API key from environment variable
+    news_api_key = os.environ.get('NEWS_API_KEY')
+    if not news_api_key:
+        st.error("News API Key is not set. Please set the NEWS_API_KEY environment variable.")
+        st.stop()
+
     newsapi = NewsApiClient(api_key=news_api_key)
-    articles = newsapi.get_everything(q=company_name, language='en', sort_by='relevancy', page_size=100)
+    try:
+        articles = newsapi.get_everything(
+            q=company_name,
+            language='en',
+            sort_by='relevancy',
+            page_size=100
+        )
+    except Exception as e:
+        st.error(f"Error fetching news articles: {e}")
+        st.stop()
 
     # Perform sentiment analysis on the articles
     sentiments = []
     for article in articles['articles']:
-        analysis = TextBlob(article['description'] or '')
-        sentiments.append(analysis.sentiment.polarity)
+        description = article['description']
+        if description:
+            analysis = TextBlob(description)
+            sentiments.append(analysis.sentiment.polarity)
 
     # Calculate average sentiment score
     if sentiments:
@@ -485,10 +504,10 @@ if st.button('Run Enhanced LSTM Model to Predict Future Price'):
     testPredict = model.predict(testX)
 
     # Invert predictions and actual values for RMSE calculation
-    trainPredict_inverted = scaler.inverse_transform(np.hstack((trainPredict, np.zeros((trainPredict.shape[0], 1)))))
-    trainY_inverted = scaler.inverse_transform(np.hstack((trainY.reshape(-1, 1), np.zeros((trainY.shape[0], 1)))))
-    testPredict_inverted = scaler.inverse_transform(np.hstack((testPredict, np.zeros((testPredict.shape[0], 1)))))
-    testY_inverted = scaler.inverse_transform(np.hstack((testY.reshape(-1, 1), np.zeros((testY.shape[0], 1)))))
+    trainPredict_inverted = scaler.inverse_transform(np.hstack((trainPredict, np.full((trainPredict.shape[0], 1), avg_sentiment))))
+    trainY_inverted = scaler.inverse_transform(np.hstack((trainY.reshape(-1, 1), np.full((trainY.shape[0], 1), avg_sentiment))))
+    testPredict_inverted = scaler.inverse_transform(np.hstack((testPredict, np.full((testPredict.shape[0], 1), avg_sentiment))))
+    testY_inverted = scaler.inverse_transform(np.hstack((testY.reshape(-1, 1), np.full((testY.shape[0], 1), avg_sentiment))))
 
     # Calculate root mean squared error
     trainScore = np.sqrt(mean_squared_error(trainY_inverted[:,0], trainPredict_inverted[:,0]))
@@ -570,4 +589,3 @@ if st.button('Run Enhanced LSTM Model to Predict Future Price'):
 
     **Note**: The sentiment score is calculated using the TextBlob library, which analyzes the polarity of the news article descriptions.
     """)
-
