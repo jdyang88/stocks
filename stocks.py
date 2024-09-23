@@ -27,6 +27,8 @@ companies = {
     'Korean Air (003490)': '003490',
     'Hyundae Motor (005380)': '005380',
     'Posco Holdings (005490)': '005490',
+    'IBK (024110)': '024110',
+    'Hanafn (086790)': '086790',
     # Add more companies and their codes as needed
 }
 
