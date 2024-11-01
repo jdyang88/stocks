@@ -5,4 +5,4 @@ matplotlib
 tensorflow
 scikit-learn
 prophet
-
+altair==4.2.2
